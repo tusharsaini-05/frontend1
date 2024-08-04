@@ -10,7 +10,7 @@ import { useState,useEffect } from 'react';
 
 const myFunction = async () => {
   // run asynchronous tasks here
-  const res = await axios.get('http://localhost:4000/issue/labIssue?department=cse&labno=1')
+  const res = await axios.get('lms-postgres.vercel.app/issue/labIssue?department=cse&labno=1')
   return res.data;
   
   
@@ -119,7 +119,7 @@ console.log(data)
 
       <span class="text-[10px] font-medium sm:text-xs">
         <button onClick={async() =>{
-          await axios.delete(`http://localhost:4000/admin/deleteIssue?id=${issue.id}`)
+          await axios.delete(`lms-postgres.vercel.app/admin/deleteIssue?id=${issue.id}`)
         }} >Solved</button>
       </span>
     </strong>
