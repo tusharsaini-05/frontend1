@@ -10,7 +10,7 @@ import { render } from 'react-dom'
 
 const myFunction = async () => {
   // run asynchronous tasks here
-  const res = await axios.get('https://lms-postgres.vercel.app/issue/labIssue?department=ee&labno=3')
+  const res = await axios.get('https://lms-postgres.vercel.app/labIssue?department=cse&labno=1')
   return res.data;
 }
 
