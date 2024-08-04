@@ -23,7 +23,7 @@ const AdministratorLogin = () => {
         setPhonenumber('');
         console.log('testf');
 
-        const response = await fetch('http://localhost:4000/administrator/signin', {
+        const response = await fetch('https://lms-postgres.vercel.app/administrator/signin', {
             method: "POST",
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({ email, password, phonenumber })

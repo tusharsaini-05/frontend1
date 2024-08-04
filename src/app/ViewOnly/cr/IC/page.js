@@ -5,28 +5,35 @@ import Footer from '@/Components/Footer'
 import Image from 'next/image'
 import axios from 'axios';
 import { useState,useEffect } from 'react';
-
+import { render } from 'react-dom'
 
 
 const myFunction = async () => {
   // run asynchronous tasks here
-  const res = await axios.get('http://localhost:4000/issue/labIssue?department=cse&labno=1')
+  const res = await axios.get('https://lms-postgres.vercel.app/issue/labIssue?department=cse&labno=1')
   return res.data;
-  
-  
 }
+
 export default function Page() {
 
+  const [bool,setBool] = useState(false);
   const [data,setData] = useState([]);
+  const [token,setToken] = useState(null);
+  const [render,setRender] = useState(false);
+
 
   useEffect(() =>{
-    const val = myFunction().then(data => setData(data))
-    
-},[])
-console.log(data)
+    const val = myFunction().then(data => setData(data))    
+    const valToken =  window.localStorage.getItem('user');
+    console.log(valToken)
+    if(bool != null){
+      setBool(true)
+      setToken(valToken)
+    }
+},[render])
+
 
   return (
-    <>
     <div>
    <Navbar/>
    
@@ -34,15 +41,14 @@ console.log(data)
 
 {/* hero section starts */}
 <section
-  className="overflow-hidden bg-[url(https://www.iitp.ac.in/images/cc-1.jpg)] bg-cover bg-top bg-no-repeat"
+  className="overflow-hidden bg-[url(https://www.materials-talks.com/wp-content/uploads/2023/05/PN11525_037_FRKL__Hero-Header-1920x675-1-1024x360.jpg)] bg-cover bg-top bg-no-repeat"
 >
   <div className="bg-black/50 p-8 md:p-12 lg:px-16 lg:py-24">
     <div className="text-center ltr:sm:text-left rtl:sm:text-right">
-      <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-5xl">DSA Lab</h2>
+      <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-5xl">Instrument Characteristics</h2>
 
       <p className="hidden max-w-lg text-white/90 md:mt-6 md:block md:text-lg md:leading-relaxed">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Inventore officia corporis quasi
-        doloribus iure architecto quae voluptatum beatae excepturi dolores.
+        This lab has experiments like Xray Diffraction , BET, UV etc for finding the properties of the materials.
       </p>
 
       <div className="mt-4 sm:mt-8">
@@ -74,8 +80,8 @@ console.log(data)
     
 
       {data.map((issue,i) =>{
-         return <a
-        key={i}  className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
+         return <div
+        key={i}  className="block rounded-xl border border-gray-800 p-8 shadow-xl transition"
         href="#"
       >
         <svg
@@ -99,36 +105,47 @@ console.log(data)
 
         <h2 className="mt-4 text-xl font-bold text-white">{issue.issue}</h2>
         <div class="flex justify-end">
-    <strong
-      class="-mb-[2px] -me-[2px] inline-flex items-center gap-1 rounded-ee-xl rounded-ss-xl bg-green-600 px-3 py-1.5 text-white"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-        />
-      </svg>
+        <button hidden={!bool} onClick={async() =>{
+                      await fetch(`https://lms-postgres.vercel.app/admin/deleteIssue?id=${issue.id}&labno=${issue.labno}&department=${issue.department}`, {
+            method: "DELETE",
+            headers: { 'Authorization': `Bearer ${JSON.parse(token).token}` },
 
-      <span class="text-[10px] font-medium sm:text-xs">
-        <button onClick={async() =>{
-          await axios.delete(`http://localhost:4000/admin/deleteIssue?id=${issue.id}`)
-        }} >Solved</button>
-      </span>
-    </strong>
+        })
+        setRender(!render);
+        
+
+                }} >
+           <strong 
+            class="-mb-[2px] -me-[2px] inline-flex items-center gap-1 rounded-ee-xl rounded-ss-xl bg-green-600 px-3 py-1.5 text-white"
+          >
+             <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+             >
+               <path
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+               />
+             </svg>
+
+               <span  class="text-[10px] font-medium sm:text-xs">
+                 Solved
+              </span>
+           </strong> 
+        </button>
+        
+    
   </div>
 
         <p className="mt-1 text-sm text-gray-300">
          {issue.description}
         </p>
-      </a>
+      </div>
        })}
 
      
@@ -242,6 +259,5 @@ console.log(data)
 </section>
 <Footer />
 </div>
-</>
   )
 }
