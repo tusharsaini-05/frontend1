@@ -1,12 +1,38 @@
+"use client"
 import React from 'react'
 import Navbar from '@/Components/Navbar'
 import Footer from '@/Components/Footer'
 import Image from 'next/image'
+import axios from 'axios';
+import { useState,useEffect } from 'react';
+import { render } from 'react-dom'
 
 
+const myFunction = async () => {
+  // run asynchronous tasks here
+  const res = await axios.get('http://54.174.251.56:8080/issue/labIssue?department=ee&labno=2')
+  return res.data;
+}
+
+export default function Page() {
+
+  const [bool,setBool] = useState(false);
+  const [data,setData] = useState([]);
+  const [token,setToken] = useState(null);
+  const [render,setRender] = useState(false);
 
 
-export default function page() {
+  useEffect(() =>{
+    const val = myFunction().then(data => setData(data))    
+    const valToken =  window.localStorage.getItem('user');
+    console.log(valToken)
+    if(bool != null){
+      setBool(true)
+      setToken(valToken)
+    }
+},[render])
+
+
   return (
     <div>
    <Navbar/>
@@ -19,7 +45,7 @@ export default function page() {
 >
   <div className="bg-black/50 p-8 md:p-12 lg:px-16 lg:py-24">
     <div className="text-center ltr:sm:text-left rtl:sm:text-right">
-      <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-5xl">Analog</h2>
+      <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-5xl">DSA Lab</h2>
 
       <p className="hidden max-w-lg text-white/90 md:mt-6 md:block md:text-lg md:leading-relaxed">
         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Inventore officia corporis quasi
@@ -50,9 +76,12 @@ export default function page() {
       </p>
     </div>
 
+    
     <div className="mt-8 grid grid-flow-cols md:grid-flow-row">
-      <a
-        className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
+
+      {data.map((issue,i) =>{
+         return <div
+        key={i}  className="block rounded-xl border border-gray-800 p-8 shadow-xl transition"
         href="#"
       >
         <svg
@@ -74,154 +103,50 @@ export default function page() {
           />
         </svg>
 
-        <h2 className="mt-4 text-xl font-bold text-white">Keyboard not working</h2>
+        <h2 className="mt-4 text-xl font-bold text-white">{issue.issue}</h2>
         <div class="flex justify-end">
-    <strong
-      class="-mb-[2px] -me-[2px] inline-flex items-center gap-1 rounded-ee-xl rounded-ss-xl bg-green-600 px-3 py-1.5 text-white"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-        />
-      </svg>
+        <button hidden={!bool} onClick={async() =>{
+                      await fetch(`http://54.174.251.56:8080/admin/deleteIssue?id=${issue.id}&labno=${issue.labno}&department=${issue.department}`, {
+            method: "DELETE",
+            headers: { 'Authorization': `Bearer ${JSON.parse(token).token}` },
 
-      <span class="text-[10px] font-medium sm:text-xs">Mark as done</span>
-    </strong>
+        })
+        setRender(!render);
+        
+
+                }} >
+           <strong 
+            class="-mb-[2px] -me-[2px] inline-flex items-center gap-1 rounded-ee-xl rounded-ss-xl bg-green-600 px-3 py-1.5 text-white"
+          >
+             <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+             >
+               <path
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+               />
+             </svg>
+
+               <span  class="text-[10px] font-medium sm:text-xs">
+                 Solved
+              </span>
+           </strong> 
+        </button>
+        
+    
   </div>
 
         <p className="mt-1 text-sm text-gray-300">
-         computer 44 keyboard wire broken 
+         {issue.description}
         </p>
-      </a>
-
-      <a
-        className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
-        href="#"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="size-10 text-pink-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M12 14l9-5-9-5-9 5 9 5z" />
-          <path
-            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-          />
-        </svg>
-
-        <h2 className="mt-4 text-xl font-bold text-white">Windows error</h2>
-
-        <p className="mt-1 text-sm text-gray-300">
-         Computer 9 not starting
-        </p>
-      </a>
-
-      <a
-        className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
-        href="#"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="size-10 text-pink-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M12 14l9-5-9-5-9 5 9 5z" />
-          <path
-            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-          />
-        </svg>
-
-        <h2 className="mt-4 text-xl font-bold text-white">Tushar</h2>
-
-        <p className="mt-1 text-sm text-gray-300">
-         Computer 9 not starting
-        </p>
-      </a>
-      <a
-        className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
-        href="#"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="size-10 text-pink-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M12 14l9-5-9-5-9 5 9 5z" />
-          <path
-            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-          />
-        </svg>
-
-        <h2 className="mt-4 text-xl font-bold text-white">akash</h2>
-
-        <p className="mt-1 text-sm text-gray-300">
-         Computer 9 not starting
-        </p>
-      </a>
-
-
-      <a
-        className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
-        href="#"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="size-10 text-pink-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M12 14l9-5-9-5-9 5 9 5z" />
-          <path
-            d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-          />
-        </svg>
-
-        <h2 className="mt-4 text-xl font-bold text-white">keyboard not working</h2>
-
-        <p className="mt-1 text-sm text-gray-300">
-         Cmputer 17 keyboard not working
-        </p>
-      </a>
+      </div>
+       })}
 
      
     <div className="mt-12 text-center">
@@ -234,12 +159,13 @@ export default function page() {
     </div>
     <div className="mt-12 text-center">
       <a
-        href="#"
+        href="/ViewOnly/ee/lab2/createissue"
         className="inline-block rounded bg-pink-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-pink-700 focus:outline-none focus:ring focus:ring-yellow-400"
       >
       <div><i class="fa-solid fa-plus"></i></div>
       
        Add Issue
+
       </a>
     </div>
   </div>

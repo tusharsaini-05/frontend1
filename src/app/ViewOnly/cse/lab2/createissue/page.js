@@ -35,14 +35,14 @@ const FormComponent = () => {
      data : JSON.stringify({
        "department": "cse",
        "issue": issue,
-       "labno": 1,
+       "labno": 2,
        "status": "notcompleted",
        "description": description
        })
       }).then((response) =>{
         console.log(response.data.newIssue)
      }).then(() => {
-      window.location.href = "/ViewOnly/cse/lab1"
+      window.location.href = "/ViewOnly/cse/lab2"
      })}
   
   useEffect(() =>{

@@ -5,9 +5,10 @@ import Image from 'next/image'
 import Footer from '@/Components/Footer'
 import { useState,useEffect } from 'react'
 import axios from 'axios'
+
 const myFunction = async () => {
   // run asynchronous tasks here
-  const res = await axios.get('http://54.174.251.56:8080/issue/depnumIssue?department=ee')
+  const res = await axios.get('http://54.174.251.56:8080/issue/depnumIssue?department=cr')
   console.log(res.data)
   return res.data;
 }
@@ -23,14 +24,14 @@ export default function Page() {
    {/* hero section starts */}
  
 <section
-  class="overflow-hidden bg-[url(https://website.nitrkl.ac.in/images/events/EE.png)] bg-cover bg-top bg-no-repeat"
+  class="overflow-hidden bg-[url(https://website.nitrkl.ac.in/images/events/CR.png)] bg-cover bg-top bg-no-repeat"
 >
   <div class="bg-black/50 p-8 md:p-12 lg:px-16 lg:py-24">
     <div class="text-center ltr:sm:text-left rtl:sm:text-right">
-      <h2 class="text-2xl font-bold text-white sm:text-3xl md:text-5xl">Electrical Engineering</h2>
+      <h2 class="text-2xl font-bold text-white sm:text-3xl md:text-5xl">Ceramic Engineering</h2>
 
       <p class="hidden max-w-lg text-white/90 md:mt-6 md:block md:text-lg md:leading-relaxed">
-       department of Electrical Engineering
+       department of Ceramic and Material Science.
       </p>
 
       <div class="mt-4 sm:mt-8">
@@ -176,7 +177,7 @@ export default function Page() {
     <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
       <a
         className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
-        href="/ViewOnly/ee/lab1/"
+        href="/ViewOnly/cr/workshop/"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +201,7 @@ export default function Page() {
         <h1 className="mt-4 text-4xl font-bold text-white">Lab 1</h1>
 
         <p className="mt-1 text-sm text-gray-300">
-        Digital 
+        Workshop
         </p>
       </a>
 
@@ -208,7 +209,7 @@ export default function Page() {
 
       <a
         className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
-        href="/ViewOnly/ee/lab2/"
+        href="/ViewOnly/cr/IC/"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -232,13 +233,13 @@ export default function Page() {
         <h1 className="mt-4 text-4xl font-bold text-white">Lab 2</h1>
 
         <p className="mt-1 text-sm text-gray-300">
-         Analog
+         Instrument Characteristics
         </p>
       </a>
 
       <a
         className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
-        href="/ViewOnly/ee/lab3"
+        href="/ViewOnly/cr/MATLAB"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -262,7 +263,7 @@ export default function Page() {
         <h1 className="mt-4 text-4xl font-bold text-white">Lab 3</h1>
 
         <p className="mt-1 text-sm text-gray-300">
-          Basic Electrical
+          MATLAB
         </p>
       </a>
     </div>

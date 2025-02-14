@@ -10,7 +10,7 @@ import { render } from 'react-dom'
 
 const myFunction = async () => {
   // run asynchronous tasks here
-  const res = await axios.get('http://54.174.251.56:8080/issue/labIssue?department=cse&labno=3')
+  const res = await axios.get('http://54.174.251.56:8080/issue/labIssue?department=cr&labno=2')
   return res.data;
 }
 
@@ -41,15 +41,14 @@ export default function Page() {
 
 {/* hero section starts */}
 <section
-  className="overflow-hidden bg-[url(https://www.iitp.ac.in/images/cc-1.jpg)] bg-cover bg-top bg-no-repeat"
+  className="overflow-hidden bg-[url(https://www.materials-talks.com/wp-content/uploads/2023/05/PN11525_037_FRKL__Hero-Header-1920x675-1-1024x360.jpg)] bg-cover bg-top bg-no-repeat"
 >
   <div className="bg-black/50 p-8 md:p-12 lg:px-16 lg:py-24">
     <div className="text-center ltr:sm:text-left rtl:sm:text-right">
-      <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-5xl">DSA Lab</h2>
+      <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-5xl">Instrument Characteristics</h2>
 
       <p className="hidden max-w-lg text-white/90 md:mt-6 md:block md:text-lg md:leading-relaxed">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Inventore officia corporis quasi
-        doloribus iure architecto quae voluptatum beatae excepturi dolores.
+        This lab has experiments like Xray Diffraction , BET, UV etc for finding the properties of the materials.
       </p>
 
       <div className="mt-4 sm:mt-8">
@@ -78,6 +77,7 @@ export default function Page() {
 
     
     <div className="mt-8 grid grid-flow-cols md:grid-flow-row">
+    
 
       {data.map((issue,i) =>{
          return <div
@@ -159,7 +159,7 @@ export default function Page() {
     </div>
     <div className="mt-12 text-center">
       <a
-        href="/ViewOnly/cse/lab3/createissue"
+        href="/ViewOnly/cr/MATLAB/createissue"
         className="inline-block rounded bg-pink-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-pink-700 focus:outline-none focus:ring focus:ring-yellow-400"
       >
       <div><i class="fa-solid fa-plus"></i></div>
@@ -183,12 +183,13 @@ export default function Page() {
     <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
       <blockquote className="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-4">
-          <img
+        <Image
             alt=""
-            src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+            src="/Assets/assistant2.jpg"
             className="size-14 rounded-full object-cover"
+            width={20}
+            height={20}
           />
-
           <div>
            
 
@@ -208,10 +209,12 @@ export default function Page() {
 
       <blockquote className="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-4">
-          <img
+          <Image
             alt=""
-            src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+            src="/Assets/assistant1.jpg"
             className="size-14 rounded-full object-cover"
+            width={20}
+            height={20}
           />
 
           <div>
@@ -230,10 +233,12 @@ export default function Page() {
 
       <blockquote className="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-4">
-          <img
+        <Image
             alt=""
-            src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+            src="/Assets/assistant3.jpg"
             className="size-14 rounded-full object-cover"
+            width={20}
+            height={20}
           />
 
           <div>

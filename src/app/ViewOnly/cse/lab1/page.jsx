@@ -5,28 +5,35 @@ import Footer from '@/Components/Footer'
 import Image from 'next/image'
 import axios from 'axios';
 import { useState,useEffect } from 'react';
-
+import { render } from 'react-dom'
 
 
 const myFunction = async () => {
   // run asynchronous tasks here
-  const res = await axios.get('lms-postgres.vercel.app/issue/labIssue?department=cse&labno=1')
+  const res = await axios.get('http://54.174.251.56:8080/issue/labIssue?department=cse&labno=1')
   return res.data;
-  
-  
 }
+
 export default function Page() {
 
+  const [bool,setBool] = useState(false);
   const [data,setData] = useState([]);
+  const [token,setToken] = useState(null);
+  const [render,setRender] = useState(false);
+
 
   useEffect(() =>{
-    const val = myFunction().then(data => setData(data))
-    
-},[])
-console.log(data)
+    const val = myFunction().then(data => setData(data))    
+    const valToken =  window.localStorage.getItem('user');
+    console.log(valToken)
+    if(bool != null){
+      setBool(true)
+      setToken(valToken)
+    }
+},[render])
+
 
   return (
-    <>
     <div>
    <Navbar/>
    
@@ -71,11 +78,10 @@ console.log(data)
 
     
     <div className="mt-8 grid grid-flow-cols md:grid-flow-row">
-    
 
       {data.map((issue,i) =>{
-         return <a
-        key={i}  className="block rounded-xl border border-gray-800 p-8 shadow-xl transition hover:border-pink-500/10 hover:shadow-pink-500/10"
+         return <div
+        key={i}  className="block rounded-xl border border-gray-800 p-8 shadow-xl transition"
         href="#"
       >
         <svg
@@ -99,36 +105,47 @@ console.log(data)
 
         <h2 className="mt-4 text-xl font-bold text-white">{issue.issue}</h2>
         <div class="flex justify-end">
-    <strong
-      class="-mb-[2px] -me-[2px] inline-flex items-center gap-1 rounded-ee-xl rounded-ss-xl bg-green-600 px-3 py-1.5 text-white"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-        />
-      </svg>
+        <button hidden={!bool} onClick={async() =>{
+                      await fetch(`http://54.174.251.56:8080/admin/deleteIssue?id=${issue.id}&labno=${issue.labno}&department=${issue.department}`, {
+            method: "DELETE",
+            headers: { 'Authorization': `Bearer ${JSON.parse(token).token}` },
 
-      <span class="text-[10px] font-medium sm:text-xs">
-        <button onClick={async() =>{
-          await axios.delete(`lms-postgres.vercel.app/admin/deleteIssue?id=${issue.id}`)
-        }} >Solved</button>
-      </span>
-    </strong>
+        })
+        setRender(!render);
+        
+
+                }} >
+           <strong 
+            class="-mb-[2px] -me-[2px] inline-flex items-center gap-1 rounded-ee-xl rounded-ss-xl bg-green-600 px-3 py-1.5 text-white"
+          >
+             <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+             >
+               <path
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+               />
+             </svg>
+
+               <span  class="text-[10px] font-medium sm:text-xs">
+                 Solved
+              </span>
+           </strong> 
+        </button>
+        
+    
   </div>
 
         <p className="mt-1 text-sm text-gray-300">
          {issue.description}
         </p>
-      </a>
+      </div>
        })}
 
      
@@ -166,13 +183,12 @@ console.log(data)
     <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
       <blockquote className="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-4">
-        <Image
+          <img
             alt=""
-            src="/Assets/assistant2.jpg"
+            src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
             className="size-14 rounded-full object-cover"
-            width={20}
-            height={20}
           />
+
           <div>
            
 
@@ -192,12 +208,10 @@ console.log(data)
 
       <blockquote className="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-4">
-          <Image
+          <img
             alt=""
-            src="/Assets/assistant1.jpg"
+            src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
             className="size-14 rounded-full object-cover"
-            width={20}
-            height={20}
           />
 
           <div>
@@ -216,12 +230,10 @@ console.log(data)
 
       <blockquote className="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-4">
-        <Image
+          <img
             alt=""
-            src="/Assets/assistant3.jpg"
+            src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
             className="size-14 rounded-full object-cover"
-            width={20}
-            height={20}
           />
 
           <div>
@@ -242,6 +254,5 @@ console.log(data)
 </section>
 <Footer />
 </div>
-</>
   )
 }
